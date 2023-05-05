@@ -6,10 +6,10 @@ import argparse
 doas_exe = ""
 proc = subprocess.run(('which','doas'), capture_output=True)
 if proc.returncode!=0:
-    print(proc.stderr)
-    exit(128)
+        print(proc.stderr)
+        exit(128)
 else:
-    doas_exe = subprocess.getoutput('which doas')
+        doas_exe = subprocess.getoutput('which doas')
 
 def parse_args(has_args=False):
         parser = argparse.ArgumentParser(
@@ -52,15 +52,20 @@ args = parse_args()
 doas_args = []
 
 if args.user:
-    doas_args.extend(('-u',args.user))
+        doas_args.extend(('-u',args.user))
 if args.shell:
-    doas_args.extend('-s')
+        doas_args.extend('-s')
 if args.stdin:
-    doas_args.extend('-n')
+        doas_args.extend('-n')
 args.timestamp = args.timestamp or 0
 
-if not args.timestamp^2 and args.command != None:
-        subprocess.run((doas_exe,) + tuple(doas_args) + ('--',) + tuple(command) )
+if os.environ.get("DEBUG"):
+        print({0:"No clear timestamp",1:"Clear timestamp and run command",3:"Clear timestamp only"}[args.timestamp])
+        print((args.command != None and not args.timestamp^2))
+        print((doas_exe,) + tuple(doas_args) + ('--',) + tuple(args.command) )
 
-if args.timestamp^1:
+if args.command != None and not args.timestamp & 2:
+        subprocess.run((doas_exe,) + tuple(doas_args) + ('--',) + tuple(args.command) )
+
+if args.timestamp & 1:
         subprocess.run((doas_exe, '-L'))
