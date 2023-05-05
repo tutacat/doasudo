@@ -9,7 +9,7 @@ if proc.returncode!=0:
     print(proc.stderr)
     exit(128)
 else:
-    doas_exe = proc.stdout
+    doas_exe = subprocess.getoutput('which doas')
 
 def parse_args(has_args=False):
         parser = argparse.ArgumentParser(
