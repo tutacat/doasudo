@@ -4,7 +4,7 @@ import subprocess
 import argparse
 
 doas_exe = ""
-proc = subprocess.run('which doas', capture_output=True)
+proc = subprocess.run(('which','doas'), capture_output=True)
 if proc.returncode!=0:
     print(proc.stderr)
     exit(128)
