@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import subprocess
 import argparse
-has_args = False
 
 doas_exe = subprocess.getoutput('which doas')
 if not doas_exe:
