@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
+import argparse
 import os
 import subprocess
-import argparse
+import sys
 
 doas_exe = ""
 proc = subprocess.run(('which','doas'), capture_output=True)
@@ -11,13 +12,13 @@ if proc.returncode!=0:
 else:
         doas_exe = subprocess.getoutput('which doas')
 
-def parse_args(has_args=False):
+def parse_args():
         parser = argparse.ArgumentParser(
             prog='doasudo.py',
             description='Translate (most) of the sudo command to doas',
             epilog='do as sudo',
         )
-        parser.add_argument('command', nargs="*")
+        parser.add_argument('command', nargs="*", metavar='command [args]',)
         parser.add_argument('-S', '--stdin', '-n', '--non-interactive',
             help="Non interactive mode, fail if the matching rule doesn't have the nopass option.",
             action='store_true',
@@ -47,7 +48,16 @@ def parse_args(has_args=False):
             )
         return parser.parse_args()
 
+if not '--' in sys.argv:
+    for i in range(1,len(sys.argv)):
+        if not sys.argv[i].startswith("-") or sys.argv[i-1] != '-u':
+            break
+    if i != len(sys.argv)-1:
+        sys.argv.insert(i,'--')
+
 args = parse_args()
+
+if os.environ.get("DEBUG"): print(args)
 
 doas_args = []
 
