@@ -60,4 +60,4 @@ if not args.timestamp^2 and args.command != None:
         subprocess.run((doas_exe,) + tuple(doas_args) + ('--',) + tuple(command) )
 
 if args.timestamp^1:
-        os.system(doas_exe+' -L')
+        subprocess.run((doas_exe, '-L'))
