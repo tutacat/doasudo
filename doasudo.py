@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
+import os
 import subprocess
 import argparse
 
-doas_exe = subprocess.getoutput('which doas')
-if not doas_exe:
-    print("doasudo.py: doas: command not found.")
+doas_exe = ""
+proc = subprocess.run('which doas', capture_output=True)
+if proc.returncode!=0:
+    print(proc.stderr)
     exit(128)
+else:
+    doas_exe = proc.stdout
 
 def parse_args(has_args=False):
         parser = argparse.ArgumentParser(
